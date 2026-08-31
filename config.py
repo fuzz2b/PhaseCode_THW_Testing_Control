@@ -17,10 +17,10 @@ DROPDOWN_GROUPS = [
                 "name":  "Set Power",
                 "path":  str("tools/power_supply_tools/set_power.py"),
             },
-            # {
-            #     "name":  "Transient Hot Wire",
-            #     "path":  str("tools/power_supply_tools/thw_power.py"),
-            # },
+            {
+                "name":  "Set Power (pre-bias)",
+                "path":  str("tools/power_supply_tools/set_power_prebias.py"),
+            },
         ],
     },
     {
@@ -33,6 +33,10 @@ DROPDOWN_GROUPS = [
             {
                 "name":  "Long Measure",
                 "path":  str("tools/joulescope_tools/long_measure.py"),
+            },
+            {
+                "name":  "Long Measure (THW pre-bias)",
+                "path":  str("tools/joulescope_tools/long_measure_prebias.py"),
             },
         ],
     },
