@@ -70,20 +70,20 @@ def run():
 
     with device:
         device.stream_buffer.suppress_mode = 'off'
-        print('READY', flush=True)  #this is the handhshake for the power supply
-
-        logging.info('read start')
+        print('READY', flush=True) #this is the handhshake for the power supply
+        
+        #logging.info('read start')
         time.sleep(0.09) # gives the power supply time to steady
         data = device.read(duration=args.duration, contiguous_duration=args.contiguous)
         
-        logging.info('read done')
+        #logging.info('read done')
 
     print(f'READY at {time.time()}', flush=True)
     #print_stats(data, device.sampling_frequency) #this can be used to print out the data
 
     if args.plot:
         plot_iv(data, device.sampling_frequency)
-        export_csv(data, device.sampling_frequency, filepath='A_LM1_dow510_2.csv')
+        export_csv(data, device.sampling_frequency, filepath='C_LD2_dow510_3.csv')
 
     return 0
 
