@@ -1,8 +1,5 @@
 """
-Script Launcher & Hardware Route Controller GUI
-
-A PyQt6 desktop launcher with a dedicated hardware wire selection dropdown,
-followed by 2 dynamic script automation menus populated by config.py.
++automation menus populated by config.py.
 """
 
 import sys
@@ -44,7 +41,7 @@ class ScriptRunner(QThread):
                 [sys.executable] + cmd_args,
                 capture_output=True,
                 text=True,
-                timeout=300
+                # removed timeout
             )
 
             output = result.stdout.strip()
@@ -55,8 +52,6 @@ class ScriptRunner(QThread):
             if errors:
                 self.output_ready.emit(f"[stderr]\n{errors}")
 
-        except subprocess.TimeoutExpired:
-            self.finished_err.emit("✗ Script timed out (> 5 min)")
         except Exception as exc:
             self.finished_err.emit(f"✗ Error: {exc}")
 
@@ -229,16 +224,16 @@ class LauncherWindow(QWidget):
         self.log.append(msg)
 
     def _log_info(self, msg: str):
-        self.log.append(f'<span style="color:#aaaacc;">{msg}</span>')
+        self.log.append(f'<span style="color:#6C99BB;">{msg}</span>')
 
     def _log_ok(self, msg: str):
-        self.log.append(f'<span style="color:#5dbc72;font-weight:bold;">{msg}</span>')
+        self.log.append(f'<span style="color:#7DAF9C;font-weight:bold;">{msg}</span>')
 
     def _log_err(self, msg: str):
-        self.log.append(f'<span style="color:#e05c5c;font-weight:bold;">{msg}</span>')
+        self.log.append(f'<span style="color:#CC4232;font-weight:bold;">{msg}</span>')
 
     def _log_warn(self, msg: str):
-        self.log.append(f'<span style="color:#e0a85c;">{msg}</span>')
+        self.log.append(f'<span style="color:#EFAC32;">{msg}</span>')
 
     # Misc helpers 
     @staticmethod
@@ -248,12 +243,12 @@ class LauncherWindow(QWidget):
         line.setObjectName("divider")
         return line
 
-    # Stylesheet
+    # Stylesheet - got claude to match it to my VScode theme
     def _apply_styles(self):
         self.setStyleSheet("""
             QWidget {
-                background-color: #1e1e2e;
-                color: #cdd6f4;
+                background-color: #372725;
+                color: #E6E1C4;
                 font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
                 font-size: 13px;
             }
@@ -262,13 +257,13 @@ class LauncherWindow(QWidget):
                 font-size: 22px;
                 font-weight: 700;
                 letter-spacing: 1px;
-                color: #cba6f7;
+                color: #EFAC32;
                 padding: 4px 0 8px 0;
             }
 
             #divider {
-                color: #313244;
-                background-color: #313244;
+                color: #5B413D;
+                background-color: #5B413D;
                 max-height: 1px;
                 border: none;
             }
@@ -276,7 +271,7 @@ class LauncherWindow(QWidget):
             #drop_label {
                 font-size: 13px;
                 font-weight: 600;
-                color: #a6adc8;
+                color: #C699BB;
                 padding-top: 4px;
             }
                            
@@ -284,25 +279,25 @@ class LauncherWindow(QWidget):
                 combobox-popup: 0;  /* Forces PyQt to use a clean style wrapper rather than OS native menus */
             }
             QComboBox#combo {
-                background-color: #2a2a3e;
-                border: 1px solid #45475a;
+                background-color: #4A332F;
+                border: 1px solid #6B4E32;
                 border-radius: 6px;
                 padding: 6px 12px;
-                color: #cdd6f4;
+                color: #E6E1C4;
                 min-height: 28px;
             }
                            
-            QComboBox#combo:hover  { border-color: #cba6f7; }
+            QComboBox#combo:hover  { border-color: #EFAC32; }
             QComboBox#combo::drop-down { border: none; width: 24px; }
             QComboBox#combo QAbstractItemView {
-                background-color: #2a2a3e;
-                border: 1px solid #45475a;
-                selection-background-color: #45475a;
+                background-color: #4A332F;
+                border: 1px solid #6B4E32;
+                selection-background-color: #A40042;
             }
 
             QPushButton#btn_execute {
-                background-color: #7c3aed;
-                color: #ffffff;
+                background-color: #EF5D32;
+                color: #372725;
                 border: none;
                 border-radius: 7px;
                 padding: 10px 20px;
@@ -310,33 +305,33 @@ class LauncherWindow(QWidget):
                 font-weight: 700;
                 letter-spacing: 0.5px;
             }
-            QPushButton#btn_execute:hover   { background-color: #6d28d9; }
-            QPushButton#btn_execute:pressed { background-color: #5b21b6; }
+            QPushButton#btn_execute:hover   { background-color: #EFAC32; }
+            QPushButton#btn_execute:pressed { background-color: #D9D762; }
             QPushButton#btn_execute:disabled {
-                background-color: #44446a;
-                color: #777799;
+                background-color: #5B413D;
+                color: #8A9A95;
             }
 
             QPushButton#btn_shutdown {
-                background-color: #3b1f1f;
-                color: #f38ba8;
-                border: 1px solid #e05c5c;
+                background-color: #420E09;
+                color: #CC4232;
+                border: 1px solid #CC4232;
                 border-radius: 7px;
                 padding: 10px 20px;
                 font-size: 14px;
                 font-weight: 700;
             }
-            QPushButton#btn_shutdown:hover   { background-color: #5c2626; }
-            QPushButton#btn_shutdown:pressed { background-color: #7a2d2d; }
+            QPushButton#btn_shutdown:hover   { background-color: #5B1A12; }
+            QPushButton#btn_shutdown:pressed { background-color: #6E241A; }
 
             QTextEdit#log {
-                background-color: #11111b;
-                border: 1px solid #313244;
+                background-color: #281C1C;
+                border: 1px solid #5B413D;
                 border-radius: 7px;
                 padding: 10px;
                 font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
                 font-size: 12px;
-                color: #cdd6f4;
+                color: #E6E1C4;
             }
         """)
 
